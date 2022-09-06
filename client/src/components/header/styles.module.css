@@ -1,0 +1,19 @@
+.offcanvas {
+    max-width: 270px;
+}
+.sidebarToggle {
+    margin: 15px;
+}
+.logo {
+    width: 100px;
+}
+.linkDesign{
+    text-decoration: none;
+    color: black;
+}
+@media (max-width: 770px) {
+    .sidebarToggle {
+        display: none;
+    }
+}
+
