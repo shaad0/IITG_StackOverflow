@@ -1,38 +1,37 @@
 const mongoose = require("mongoose");
-const Reply = require("./replyAnswer");
 
-const answerSchema = new mongoose.Schema({
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-  text: {
-    required: true,
-    type: String,
-  },
-  voteCount: {
-    type: Number,
-  },
-  postedOn: {
-    type: Date,
-  },
-  replies: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Reply",
+const answerSchema = new mongoose.Schema(
+  {
+    description: {
+      type: String,
+      required: true,
     },
-  ],
-  votes: [
-    {
+    upvotes: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Vote"
-    }
-  ]
-});
+      ref: 'User'
+    }],
+    downvotes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    question: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Question"
+    },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
-answerSchema.post("findOneAndDelete", async (data) => {
-  await Reply.deleteMany({ _id: { $in: data.replies } });
-});
-
-const Answer = mongoose.model("Answer", answerSchema);
-module.exports = Answer;
+module.exports = mongoose.model("Answer", answerSchema);

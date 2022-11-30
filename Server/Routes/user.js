@@ -1,18 +1,16 @@
 const express = require("express");
-const multer = require('multer');
-const { storage } = require('../cloudinary');
-const upload = multer({ storage });
-const {
-  userDetails,
-  editDetails,
-  deleteAccount,
-} = require("../Controllers/user");
+const userController = require("../controllers/userController");
 const router = express.Router();
+const authCheck = require("../middleware/authCheck");
+const populateUser = require("../middleware/populateUser");
 
-const isLoggedIn = require("../utils/isLoggedIn");
+//GET ALL USERS
+router.get("/", userController.getAllUsers);
 
-router.get("/", isLoggedIn, userDetails);
-router.post("/edit", isLoggedIn, upload.single("image"), editDetails);
-router.post("/delete", isLoggedIn, deleteAccount);
+//GET A SINGLE USER
+router.get("/:user_id", userController.getUser);
+
+//UPDATE A USER
+router.patch("/:user_id", authCheck, populateUser, userController.updateUser);
 
 module.exports = router;

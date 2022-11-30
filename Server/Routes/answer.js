@@ -1,22 +1,15 @@
 const express = require("express");
-const router = express.Router();
-const isLoggedIn = require("../utils/isLoggedIn");
-const isAuthorAnswer = require("../utils/isAuthorAnswer");
+const answerController = require("../controllers/answerController");
+const authCheck = require("../middleware/authCheck");
+const populateUser = require("../middleware/populateUser");
 
-const {
-  addAnswer,
-  deleteAnswer,
-  addVoteToAnswer,
-} = require("../Controllers/answer");
-router.post("/:id/answer", isLoggedIn, addAnswer);
-router.post("/:id/answer/:answerId", isLoggedIn, isAuthorAnswer, deleteAnswer);
-router.post("/:id/answer/:answerId/addVote", isLoggedIn, addVoteToAnswer);
-router.get(
-  "/:id/answer/:answerId/isValid",
-  isLoggedIn,
-  isAuthorAnswer,
-  (req, res) => {
-    res.send("Allowed");
-  }
-);
+const router = express.Router();
+
+//VOTES
+router.patch('/vote/:answer_id', authCheck, populateUser, answerController.vote)
+
+router.patch("/:answer_id", authCheck, populateUser, answerController.updateAnswer);
+
+router.delete("/:answer_id", authCheck, populateUser, answerController.deleteAnswer);
+
 module.exports = router;
